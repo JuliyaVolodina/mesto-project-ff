@@ -4,7 +4,7 @@ import {createCard,
         deleteCard,
         clickLike} from './card.js';
 import {openModal,
-        closeModal} from './modal.js'
+        closeModal,} from './modal.js'
 
 const placesList = document.querySelector('.places__list');
 //попапы
@@ -18,6 +18,8 @@ const imagePopup = popupBigСard.querySelector('.popup__image');
 const formProfile = document.querySelector('.popup_type_edit .popup__form');
 const nameInput = formProfile.querySelector('.popup__input_type_name');
 const jobInput = formProfile.querySelector('.popup__input_type_description');
+const headerTitle = document.querySelector('.profile__title');
+const headerText = document.querySelector('.profile__description');
 
 //форма добавления карточек
 const formCard = document.querySelector('.popup_type_new-card .popup__form');
@@ -63,8 +65,6 @@ document.querySelectorAll('.popup__close').forEach((button) => {
 // Обработчик отправки формы редактирования данных
 function handleFormSubmit(evt) {
     evt.preventDefault(); 
-    const headerTitle = document.querySelector('.profile__title');
-    const headerText = document.querySelector('.profile__description');
     headerTitle.textContent = nameInput.value;
     headerText.textContent = jobInput.value;
     closeModal();

@@ -10,18 +10,20 @@ export function openModal(elem) {
         input.reset();
     });
 };
+
 //закрытие модального окна
 export function closeModal() {
-  const activePopup = document.querySelector('.popup_is-opened');
-  activePopup.classList.remove('popup_is-opened');
+  document.querySelector('.popup_is-opened').classList.remove('popup_is-opened');
   document.removeEventListener('keydown', closeModalEscape);
 };
+
 //закрытие по Esc
 function closeModalEscape(evt) {
     if (evt.key === 'Escape') {
         closeModal();
     }
 };
+
 //закрытие по оверлею
  function closeByOverlay (evt) {
     if (evt.target === evt.currentTarget) {

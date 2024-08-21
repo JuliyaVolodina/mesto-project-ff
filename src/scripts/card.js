@@ -1,3 +1,4 @@
+//создание карточки
 export function createCard(element, deleteCard, clickLike) {
     const cardTemplate = document.querySelector('#card-template').content;
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
@@ -16,10 +17,12 @@ export function createCard(element, deleteCard, clickLike) {
     return cardElement;
 };
 
+//функция обработки слущателя лайка
 export function clickLike(evt) {
     evt.classList.toggle('card__like-button_is-active');
 }
 
+//функция удаления карточки
 export function deleteCard(cardElement) {
     return cardElement.remove();
 };
