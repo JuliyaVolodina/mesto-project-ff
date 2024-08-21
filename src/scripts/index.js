@@ -84,6 +84,7 @@ function addNewCard(evt) {
 
 //слушатель добавления карточек
 formCard.addEventListener('submit', addNewCard);
+fjsakalkjlafjal
 
 
 
