@@ -88,4 +88,3 @@ initialCards.forEach((card) => {
     placesList.append(cardElement);
     }
 );
-

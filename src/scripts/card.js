@@ -29,4 +29,3 @@ export function clickLike(evt) {
 export function deleteCard(cardElement) {
     return cardElement.remove();
 };
-

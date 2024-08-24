@@ -1,16 +1,14 @@
 //открытие модального окна
 export function openModal(elem) {
     elem.classList.add('popup_is-opened');
+    elem.addEventListener('click', closeByOverlay);
     document.addEventListener('keydown', closeModalEscape);
-    document.querySelectorAll('.popup_is-opened').forEach((ovl) => {
-        ovl.addEventListener('click', closeByOverlay);
-        }
-    );
 };
 
 //закрытие модального окна
 export function closeModal(elem) {
   elem.classList.remove('popup_is-opened');
+  elem.removeEventListener('click', closeByOverlay);
   document.removeEventListener('keydown', closeModalEscape);
 };
 
