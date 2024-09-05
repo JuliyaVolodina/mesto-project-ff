@@ -20,5 +20,37 @@
   bottom: 0;
   right: 0;
   z-index: 10;
+}
+
+.popup__input {
+  outline: none;
+}
+
+/* кнопка отключена */
+.popup__button_disabled {
+ 
+  opacity: 0.2;
   
+
+}
+/* ошибка ввода  */
+.popup__input_type_error {
+  border-bottom-color: rgba(255, 0, 0, 1);
+}
+
+.input {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14.52px;
+  text-align: left;
+  color: rgba(255, 0, 0, 0);
+  display: block;
+  height: 34px;
+}
+/* видна всплывающая ошибка */
+.popup__error_visible {
+  color: rgba(255, 0, 0, 1);
+
+
+
 }
