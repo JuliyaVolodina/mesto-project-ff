@@ -5,14 +5,12 @@ const config = {
       'Content-Type': 'application/json'
     }
 };
-
 const answer = (res) => {
     if (res.ok) {
       return res.json();
     }
     return Promise.reject(`Ошибка: ${res.status}`);
 };
-
 const error = (error) => {
     console.error('Ошибка:', error);
 };  
@@ -24,11 +22,9 @@ export function getUserInfo() {
         headers: config.headers
     })
     .then(answer)
-   //.then((data) => {
-     //   console.log(data)
-   // })
     .catch(error);
 }; 
+
 //загрузка новых данных о пользователе на сервер
 export function changeUser(name, about) {
     return fetch(`${config.baseUrl}/users/me`, {
@@ -37,12 +33,12 @@ export function changeUser(name, about) {
         body: JSON.stringify({
             name: name,
             about: about
-         
         })
     })
     .then(answer)
     .catch(error);
 };
+
 //загрузка аватара
 export function getUserAvatar(avatar) {
     return fetch(`${config.baseUrl}/users/me/avatar`, {
@@ -53,7 +49,6 @@ export function getUserAvatar(avatar) {
         })
     })
     .then(answer)
-    
     .catch(error); 
 }; 
 
@@ -64,10 +59,6 @@ export function getArrayOfCards() {
         headers: config.headers
     })
     .then(answer)
-    //.then(data => {
-    //  console.log(data)
-   // })
-    
     .catch(error);
 };
 
@@ -79,7 +70,6 @@ export function addCardToServer(name, link) {
         body: JSON.stringify({
             name: name,
             link: link,
-          
         })
     })
     .then(answer)
@@ -95,7 +85,6 @@ export function deleteCardsOnServer(cardId) {
     .then(answer)
     .catch(error);
 }; 
-
 
 //добавления лайка карточке
 export function addToLikesArray(cardId) {

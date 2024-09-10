@@ -7,7 +7,7 @@ export const config = {
     inactiveButtonClass: 'popup__button_disabled',
     inputErrorClass: 'popup__input_type_error',
     errorClass: 'popup__error_visible'
-  };
+};
 
 // добавляем класс с ошибкой и выводим ошибку
 function showInputError(form, element, config) {
@@ -50,8 +50,8 @@ function setEventListeners(form, config) {
         element.addEventListener('input', function () {
             checkInputValidity(form, element);
             toggleButtonState(inputList, buttonElement);
-        })
-    })
+        });
+    });
 };
 
 //функция проверки наличия невалидности полей
@@ -72,18 +72,15 @@ const hasInvalidInput = (inputList) => {
     }
 };
 
-//функция отправки формы
+//включить проверку 
 export function enableValidation() {
     const formList = Array.from(document.querySelectorAll(config.formSelector));
     formList.forEach((elem) => {
-        elem.addEventListener('submit', (evt) => {
-            evt.preventDefault();
-        });
         setEventListeners(elem, config);
-    })
+    });
 };
 
-//функция очистки ошибок валидации и деактивации кнопки
+//очистить ошибки и деактивация кнопки
 export function clearValidation(form, config) {
     const inputList = Array.from(form.querySelectorAll(config.inputSelector));
     const buttonElement = form.querySelector(config.submitButtonSelector);

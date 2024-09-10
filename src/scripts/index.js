@@ -10,7 +10,8 @@ import {enableValidation,
 import {getUserInfo, 
        getArrayOfCards, 
        changeUser, 
-       addCardToServer, getUserAvatar} from './api.js';
+       addCardToServer, 
+       getUserAvatar} from './api.js';
        
 //див для карточек
 const placesList = document.querySelector('.places__list');
@@ -45,7 +46,6 @@ const profileImage = document.querySelector('.profile__image');
 const formAvatar = document.querySelector('.popup_editing_avatars .popup__form');
 const inputAvatar = formAvatar.querySelector('#link-input-avatar');
 const buttonPopupAvatar = formAvatar.querySelector('.button');
-console.log(buttonPopupAvatar)
 
 //функция обновления аватара на странице
 function updateNewAvatar(evt) {
@@ -64,59 +64,9 @@ function updateNewAvatar(evt) {
         buttonPopupAvatar.textContent = 'Сохранить';
         buttonPopupAvatar.disabled = false;
     });
-    
     closeModal(popupAvatar);
-    formAvatar.reset();
 };
 
-//открываем попап добавления аватара
-profileImage.addEventListener('click', function () {
-    openModal(popupAvatar);
-    clearValidation(formAvatar, config);
-    formAvatar.reset();
-});
-
-//отправляем форму обновления аватара
-formAvatar.addEventListener('submit', updateNewAvatar);
-
-//функция добавления всех карточек
-function processCards(cardsArray, userId) {
-    cardsArray.forEach((card) => {
-    const cardElement = createCard(card, deleteCard, addLike, deleteLike, openPopupCards, currentUserId);
-        if (cardElement) {
-            placesList.append(cardElement);
-        } else {
-            console.error('Ошибка при создании карточки:', card);
-        }
-        const buttonDelete = cardElement.querySelector('.card__delete-button');
-        if (card.owner._id !== userId) {
-              buttonDelete.remove();
-            }
-    });
-}
-
-//добавление профиля и карточек с сервера на страницу
-document.addEventListener('DOMContentLoaded', () => {
-    const userInfoPromise = getUserInfo();
-    const cardsPromise = getArrayOfCards();
-    Promise.all([userInfoPromise, cardsPromise])
-        .then(([userData, cardsData]) => {
-            profileTitle.textContent = userData.name;
-            profileDescription.textContent = userData.about;
-            profileImage.style.backgroundImage = `url(${userData.avatar})`;
-            const profileSection = document.querySelector('.profile');
-            profileSection.setAttribute('data-user-id', userData._id);
-            currentUserId = userData._id;
-            console.log(currentUserId)
-            processCards(cardsData, currentUserId);
-            console.log(cardsData)
-        })
-        
-        .catch((error) => {
-            console.error('Ошибка при загрузке данных:', error);
-        });
-});
-//console.log(currentUserId)
 //функция-обработчик отправки формы редактирования данных
 function submitEditForm(evt) {
     evt.preventDefault(); 
@@ -135,7 +85,7 @@ function submitEditForm(evt) {
     .finally(() => {
         buttonPopupEdit.textContent = 'Сохранить';
         buttonPopupEdit.disabled = false;
-    })
+    });
     closeModal(popupEdit);
     formProfile.reset();
 };
@@ -158,18 +108,34 @@ function addNewCard(elem) {
     .finally(() => {
         buttonPopupNewCard.textContent = 'Сохранить';
         buttonPopupNewCard.disabled = false;
-    })
+    });
     closeModal(popupNewCard);
     formCard.reset();
 };
 
-//открываем попап увеличенной карточки
-function openPopupCards(elem) {
-    imagePopup.src = elem.src;
-    imagePopup.alt = elem.alt;
-    titlePopup.textContent = elem.alt;
-    openModal(popupBigСard);
-}
+//функция добавления всех карточек
+function processCards(cardsArray, userId) {
+    cardsArray.forEach((card) => {
+    const cardElement = createCard(card, deleteCard, addLike, deleteLike, openPopupCards, currentUserId);
+        if (cardElement) {
+            placesList.append(cardElement);
+        } else {
+            console.error('Ошибка при создании карточки:', card);
+        }
+        const buttonDelete = cardElement.querySelector('.card__delete-button');
+        if (card.owner._id !== userId) {
+              buttonDelete.remove();
+        }
+    });
+};
+
+//открываем попап добавления аватара
+profileImage.addEventListener('click', function () {
+    openModal(popupAvatar);
+    clearValidation(formAvatar, config);
+    formAvatar.reset();
+});
+
 //открываем попап редактирования профиля
 document.querySelector('.profile__edit-button').addEventListener('click', function() {
     openModal(popupEdit);
@@ -186,25 +152,52 @@ document.querySelector('.profile__edit-button').addEventListener('click', functi
 
 //открываем попап добавления карточек
 document.querySelector('.profile__add-button').addEventListener('click', function() {
-   openModal(popupNewCard);
-   formCard.reset();
-   clearValidation(formCard, config);
-   }
-);
+    openModal(popupNewCard);
+    formCard.reset();
+    clearValidation(formCard, config);
+ });
+
+//открываем попап увеличенной карточки
+function openPopupCards(elem) {
+    imagePopup.src = elem.src;
+    imagePopup.alt = elem.alt;
+    titlePopup.textContent = elem.alt;
+    openModal(popupBigСard);
+};
+
 //удаляем попапы по крестику
 document.querySelectorAll('.popup__close').forEach((button) => {
     button.addEventListener('click', function () {
     const openPopup = document.querySelector('.popup_is-opened');
        closeModal(openPopup);
-       })
+    });
 });
 
+//отправляем форму обновления аватара
+formAvatar.addEventListener('submit', updateNewAvatar);
 
 //отправка формы редактирования данных
 formProfile.addEventListener('submit', submitEditForm);
 
 //отправка формы добавления карточек
 formCard.addEventListener('submit', addNewCard);
+
+//добавление профиля и карточек с сервера на страницу
+document.addEventListener('DOMContentLoaded', () => {
+    const userInfoPromise = getUserInfo();
+    const cardsPromise = getArrayOfCards();
+    Promise.all([userInfoPromise, cardsPromise])
+        .then(([userData, cardsData]) => {
+            profileTitle.textContent = userData.name;
+            profileDescription.textContent = userData.about;
+            profileImage.style.backgroundImage = `url(${userData.avatar})`;
+            currentUserId = userData._id;
+            processCards(cardsData, currentUserId);
+        })
+        .catch((error) => {
+            console.error('Ошибка при загрузке данных:', error);
+        });
+});
 
 //вызов функции валидации формы
 enableValidation(config);
