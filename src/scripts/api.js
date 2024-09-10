@@ -1,10 +1,21 @@
 const config = {
-    baseUrl: 'https://mesto.nomoreparties.co/wff-cohort-22',
+    baseUrl: 'https://mesto.nomoreparties.co/v1/wff-cohort-22',
     headers: {
       authorization: '9724a147-d16e-487f-81da-4aa0c940b312',
       'Content-Type': 'application/json'
     }
 };
+
+const answer = (res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+};
+
+const error = (error) => {
+    console.error('Ошибка:', error);
+};  
 
 //загрузка информации о пользователе 
 export function getUserInfo() {
@@ -12,18 +23,12 @@ export function getUserInfo() {
         method: 'GET',
         headers: config.headers
     })
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-        })
-    .catch((error) => {
-        console.error('Ошибка:', error);
-    
-    });
+    .then(answer)
+   //.then((data) => {
+     //   console.log(data)
+   // })
+    .catch(error);
 }; 
-
 //загрузка новых данных о пользователе на сервер
 export function changeUser(name, about) {
     return fetch(`${config.baseUrl}/users/me`, {
@@ -32,37 +37,38 @@ export function changeUser(name, about) {
         body: JSON.stringify({
             name: name,
             about: about
+         
         })
     })
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+    .then(answer)
+    .catch(error);
+};
+//загрузка аватара
+export function getUserAvatar(avatar) {
+    return fetch(`${config.baseUrl}/users/me/avatar`, {
+        method: 'PATCH',
+        headers: config.headers,
+        body: JSON.stringify({
+            avatar: avatar
+        })
     })
-    .catch((error) => {
-        console.error('Ошибка:', error);
+    .then(answer)
     
-    });
+    .catch(error); 
 }; 
 
 //загрузка массива карточек на страницу
 export function getArrayOfCards() {
-    
     return fetch(`${config.baseUrl}/cards`, {
         method: 'GET',
         headers: config.headers
     })
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch(error => {
-        console.error('Ошибка:', error);
-        return [];
-    });
+    .then(answer)
+    //.then(data => {
+    //  console.log(data)
+   // })
+    
+    .catch(error);
 };
 
 //загрузка на сервер новой карточки 
@@ -72,19 +78,12 @@ export function addCardToServer(name, link) {
         headers: config.headers,
         body: JSON.stringify({
             name: name,
-            link: link
+            link: link,
+          
         })
     })
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((error) => {
-        console.error('Ошибка:', error);
-    
-    });
+    .then(answer)
+    .catch(error);
 }; 
 
 //удаление карточек с сервера
@@ -93,17 +92,10 @@ export function deleteCardsOnServer(cardId) {
         method: 'DELETE',
         headers: config.headers,
     })
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((error) => {
-        console.error('Ошибка:', error);
-    
-    });
+    .then(answer)
+    .catch(error);
 }; 
+
 
 //добавления лайка карточке
 export function addToLikesArray(cardId) {
@@ -111,20 +103,8 @@ export function addToLikesArray(cardId) {
         method: 'PUT',
         headers: config.headers
         })
-        .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-        })
-        .then(data => {
-            if (!data.likes.some(like => like._id === userId)) {
-                data.likes.push({ _id: userId });
-            }
-        })
-        .catch((error) => {
-            console.error('Ошибка:', error);
-    });
+        .then(answer)
+        .catch(error);
 }; 
 
 //удаление лайка у карточки
@@ -133,18 +113,8 @@ export function deleteToLikesArray(cardId) {
         method: 'DELETE',
         headers: config.headers
         })
-        .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-        })
-        .then(data => {
-            data.likes = data.likes.filter(like => like._id !== userId);
-        })
-        .catch((error) => {
-           console.error('Ошибка:', error);
-    });
+        .then(answer)
+        .catch(error);
 }; 
 
 

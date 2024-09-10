@@ -13,8 +13,8 @@
     <img src="<%=require('./images/logo.svg')%>" alt="Логотип проекта место" class="logo header__logo">
   </header>
   <main class="content">
-    <section class="profile page__section">
-      <div class="profile__image" style="background-image: url(<%=require('./images/avatar.jpg')%>)"></div>
+    <section class="profile page__section" data-user-id="">
+      <div class="profile__image" style="background-image: url"></div>
       <div class="profile__info">
         <h1 class="profile__title"></h1>
         <button class="profile__edit-button" type="button"></button>
@@ -63,6 +63,27 @@
       </form>
     </div>
   </div>
+
+  <div class="popup popup_is-animated popup_editing_avatars">
+    <div class="popup__content">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Обновить аватар</h3>
+      <form class="popup__form" name="edit-profile" novalidate>
+        <input id="link-input-avatar"
+               type="url" 
+               name="link-avatar" 
+               class="popup__input popup__input_type_url avatar" 
+               placeholder="Ссылка на аватар"
+               pattern="https?://.+" 
+               data-error="В поле «Ссылка на аватар» должен быть URL"
+               required>
+        <span class="input link-input-avatar-error popup__error_visible"></span>
+        <button type="submit" class="button popup__button">Сохранить</button>
+      </form>
+    </div>
+  </div>
+
+
   <div class="popup popup_is-animated popup_type_new-card">
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
