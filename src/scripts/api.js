@@ -5,15 +5,12 @@ const config = {
       'Content-Type': 'application/json'
     }
 };
-const answer = (res) => {
+const checkAnswer = (res) => {
     if (res.ok) {
       return res.json();
     }
     return Promise.reject(`Ошибка: ${res.status}`);
 };
-const error = (error) => {
-    console.error('Ошибка:', error);
-};  
 
 //загрузка информации о пользователе 
 export function getUserInfo() {
@@ -21,8 +18,7 @@ export function getUserInfo() {
         method: 'GET',
         headers: config.headers
     })
-    .then(answer)
-    .catch(error);
+    .then(checkAnswer)
 }; 
 
 //загрузка новых данных о пользователе на сервер
@@ -35,8 +31,7 @@ export function changeUser(name, about) {
             about: about
         })
     })
-    .then(answer)
-    .catch(error);
+    .then(checkAnswer)
 };
 
 //загрузка аватара
@@ -48,8 +43,7 @@ export function getUserAvatar(avatar) {
             avatar: avatar
         })
     })
-    .then(answer)
-    .catch(error); 
+    .then(checkAnswer)
 }; 
 
 //загрузка массива карточек на страницу
@@ -58,8 +52,7 @@ export function getArrayOfCards() {
         method: 'GET',
         headers: config.headers
     })
-    .then(answer)
-    .catch(error);
+    .then(checkAnswer)
 };
 
 //загрузка на сервер новой карточки 
@@ -72,8 +65,7 @@ export function addCardToServer(name, link) {
             link: link,
         })
     })
-    .then(answer)
-    .catch(error);
+    .then(checkAnswer)
 }; 
 
 //удаление карточек с сервера
@@ -82,8 +74,7 @@ export function deleteCardsOnServer(cardId) {
         method: 'DELETE',
         headers: config.headers,
     })
-    .then(answer)
-    .catch(error);
+    .then(checkAnswer)
 }; 
 
 //добавления лайка карточке
@@ -92,8 +83,7 @@ export function addToLikesArray(cardId) {
         method: 'PUT',
         headers: config.headers
         })
-        .then(answer)
-        .catch(error);
+        .then(checkAnswer)
 }; 
 
 //удаление лайка у карточки
@@ -102,8 +92,7 @@ export function deleteToLikesArray(cardId) {
         method: 'DELETE',
         headers: config.headers
         })
-        .then(answer)
-        .catch(error);
+        .then(checkAnswer)
 }; 
 
 

@@ -1,12 +1,11 @@
 import '../pages/index.css';
 import {createCard, 
-        deleteCard,
-        addLike, deleteLike} from './card.js';
+        deleteCard, 
+        liking} from './card.js';
 import {openModal,
         closeModal} from './modal.js';
 import {enableValidation,
-       clearValidation,
-       config} from './validation.js';
+       clearValidation} from './validation.js';
 import {getUserInfo, 
        getArrayOfCards, 
        changeUser, 
@@ -15,9 +14,6 @@ import {getUserInfo,
        
 //див для карточек
 const placesList = document.querySelector('.places__list');
-
-//ID пользователя
-let currentUserId = null;
 
 //форма редактирования данных
 const popupEdit = document.querySelector('.popup_type_edit');
@@ -47,6 +43,19 @@ const formAvatar = document.querySelector('.popup_editing_avatars .popup__form')
 const inputAvatar = formAvatar.querySelector('#link-input-avatar');
 const buttonPopupAvatar = formAvatar.querySelector('.button');
 
+//конфигуратор
+const config = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_visible'
+};
+
+//ID пользователя
+let currentUserId = null;
+
 //функция обновления аватара на странице
 function updateNewAvatar(evt) {
     evt.preventDefault(); 
@@ -54,8 +63,8 @@ function updateNewAvatar(evt) {
     buttonPopupAvatar.textContent = 'Сохранение...';
     buttonPopupAvatar.disabled = true;
     getUserAvatar(newAvatarUrl)
-    .then(() => {
-        profileImage.style.backgroundImage = `url(${newAvatarUrl})`;
+    .then((data) => {
+        profileImage.style.backgroundImage = `url(${data.avatar})`;
     })
     .catch((error) => {
         console.error('Ошибка при обновлении данных:', error);
@@ -99,7 +108,7 @@ function addNewCard(elem) {
     buttonPopupNewCard.disabled = true;
     addCardToServer(name, link)
     .then((data) => {
-        const cardElement = createCard(data, deleteCard, addLike, deleteLike, openPopupCards, currentUserId);
+        const cardElement = createCard(data, deleteCard, liking, openPopupCards, currentUserId);
         placesList.prepend(cardElement);
     })
     .catch((error) => {
@@ -114,17 +123,13 @@ function addNewCard(elem) {
 };
 
 //функция добавления всех карточек
-function processCards(cardsArray, userId) {
+function processCards(cardsArray) {
     cardsArray.forEach((card) => {
-    const cardElement = createCard(card, deleteCard, addLike, deleteLike, openPopupCards, currentUserId);
+    const cardElement = createCard(card, deleteCard, liking, openPopupCards, currentUserId);
         if (cardElement) {
             placesList.append(cardElement);
         } else {
             console.error('Ошибка при создании карточки:', card);
-        }
-        const buttonDelete = cardElement.querySelector('.card__delete-button');
-        if (card.owner._id !== userId) {
-              buttonDelete.remove();
         }
     });
 };

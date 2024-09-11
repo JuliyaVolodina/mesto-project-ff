@@ -1,14 +1,3 @@
-
-// настройки валидации
-export const config = {
-    formSelector: '.popup__form',
-    inputSelector: '.popup__input',
-    submitButtonSelector: '.popup__button',
-    inactiveButtonClass: 'popup__button_disabled',
-    inputErrorClass: 'popup__input_type_error',
-    errorClass: 'popup__error_visible'
-};
-
 // добавляем класс с ошибкой и выводим ошибку
 function showInputError(form, element, config) {
     element.classList.add(config.inputErrorClass);
@@ -33,7 +22,7 @@ function hideInputError(form, element, config) {
 };
 
 // Функция валидности для добавления/удаления ошибки
-function checkInputValidity(form, element) {
+function checkInputValidity(form, element, config) {
     if (!element.validity.valid) {
        showInputError(form, element, config);
     } else {
@@ -45,11 +34,11 @@ function checkInputValidity(form, element) {
 function setEventListeners(form, config) {
     const inputList = Array.from(form.querySelectorAll(config.inputSelector));
     const buttonElement = form.querySelector(config.submitButtonSelector);
-    toggleButtonState(inputList, buttonElement);
+    toggleButtonState(inputList, buttonElement, config);
     inputList.forEach((element) => {
         element.addEventListener('input', function () {
-            checkInputValidity(form, element);
-            toggleButtonState(inputList, buttonElement);
+            checkInputValidity(form, element, config);
+            toggleButtonState(inputList, buttonElement, config);
         });
     });
 };
@@ -62,7 +51,7 @@ const hasInvalidInput = (inputList) => {
 }; 
  
  //функция переключения кнопок
- const toggleButtonState = (inputList, buttonElement) => {        
+ const toggleButtonState = (inputList, buttonElement, config) => {        
         if (hasInvalidInput(inputList)) {                     
           buttonElement.disabled = true;                
           buttonElement.classList.add(config.inactiveButtonClass);     
@@ -73,7 +62,7 @@ const hasInvalidInput = (inputList) => {
 };
 
 //включить проверку 
-export function enableValidation() {
+export function enableValidation(config) {
     const formList = Array.from(document.querySelectorAll(config.formSelector));
     formList.forEach((elem) => {
         setEventListeners(elem, config);

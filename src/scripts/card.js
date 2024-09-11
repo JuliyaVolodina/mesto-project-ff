@@ -3,65 +3,58 @@ import {deleteCardsOnServer,
     deleteToLikesArray} from './api.js';
 
 //создание карточки
-export function createCard(element, deleteCard, addLike, deleteLike, openPopupCards, currentUserId) {
- const cardTemplate = document.querySelector('#card-template').content;
- const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
- const cardImage = cardElement.querySelector('.card__image');
- cardImage.src = element.link;
- cardImage.alt = element.name;
- const titleCard = cardElement.querySelector('.card__title');
- titleCard.textContent = element.name;
- const cardId = element._id;
- cardElement.querySelector('.card__delete-button').addEventListener('click', function() {
-     deleteCard(cardElement, cardId);
- });
- const buttonLike = cardElement.querySelector('.card__like-button');
- const likeCounter = cardElement.querySelector('.like-counter');
- likeCounter.textContent = element.likes.length;
- updateLikeButtonState(element.likes, currentUserId, buttonLike);
- buttonLike.addEventListener('click', function() {
-    if (buttonLike.classList.contains('card__like-button_is-active')) {
-        deleteLike(buttonLike, cardId, currentUserId, likeCounter);
-    } else {
-        addLike(buttonLike, cardId, currentUserId, likeCounter);
-    }
- });
- cardImage.addEventListener('click', function() {
-    openPopupCards(cardImage);
- })   
- return cardElement;
-};
-
-//добавляем лайк
-export function addLike(button, cardId, currentUser, number) {
- addToLikesArray(cardId)
-    .then((data) => {
-        changeLikeState(button, number, data.likes, currentUser);
-    })
-    .catch((error) => {
-        console.error('Ошибка при добавлении лайка:', error);
+export function createCard(element, deleteCard, liking, openPopupCards, currentUserId) {
+    const cardTemplate = document.querySelector('#card-template').content;
+    const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
+    const cardImage = cardElement.querySelector('.card__image');
+    const buttonDelete = cardElement.querySelector('.card__delete-button');
+    const titleCard = cardElement.querySelector('.card__title');
+    const buttonLike = cardElement.querySelector('.card__like-button');
+    const likeCounter = cardElement.querySelector('.like-counter');
+    const cardId = element._id;
+    cardImage.src = element.link;
+    cardImage.alt = element.name;
+    titleCard.textContent = element.name;
+    likeCounter.textContent = element.likes.length;
+    if (element.owner._id !== currentUserId) {
+        buttonDelete.remove();
+    };
+    updateLikeButtonState(element.likes, currentUserId, buttonLike);
+    buttonDelete.addEventListener('click', function() {
+        deleteCard(cardElement, cardId);
     });
-};
-
-//удаляем лайк
-export function deleteLike(button, cardId, currentUser, number) {
- deleteToLikesArray(cardId)
-    .then((data) => {
-        changeLikeState(button, number, data.likes, currentUser);
-    })
-    .catch((error) => {
-        console.error('Ошибка при удалении лайка:', error);
+    buttonLike.addEventListener('click', function() {
+        liking(buttonLike, cardId, currentUserId, likeCounter)
     });
+    cardImage.addEventListener('click', function() {
+        openPopupCards(cardImage);
+    });  
+    return cardElement;
 };
 
-//меняем состояние лайка
-function changeLikeState(button, number, likes, currentUser) {
-    if (likes.some(user => user._id === currentUser)) {
-        button.classList.add('card__like-button_is-active');
+export function liking(button, cardId, currentUser, numberLike) {
+    if (button.classList.contains('card__like-button_is-active')) {
+        deleteToLikesArray(cardId)
+       .then((data) => {
+            if (!data.likes.some(user => user._id === currentUser)) {
+                button.classList.remove('card__like-button_is-active');
+                numberLike.textContent = data.likes.length;
+            }
+        })
+        .catch((error) => {
+            console.error('Ошибка при удалении лайка:', error);     });
     } else {
-        button.classList.remove('card__like-button_is-active');
+        addToLikesArray(cardId)
+        .then((data) => {
+            if (data.likes.some(user => user._id === currentUser)) {
+                button.classList.add('card__like-button_is-active');
+                numberLike.textContent = data.likes.length;
+            }
+        })
+        .catch((error) => {
+            console.error('Ошибка при добавлении лайка:', error);
+        });
     }
-    number.textContent = likes.length;
 };
 
 // проверка наличия лайка текущего пользователя
